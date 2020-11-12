@@ -2,71 +2,80 @@
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
+#include <wx/spinctrl.h>
+#include <wx/filepicker.h>
 #include <wx/datectrl.h>
 #include <wx/wizard.h>
 
-WX_DEFINE_ARRAY_PTR(wxWizardPageSimple*, WizardPages);
+WX_DEFINE_ARRAY_PTR(wxWizardPageSimple *, WizardPages);
 
-class MyApp : public wxApp
+class mainWizard : public wxWizard
 {
+protected:
+    wxStaticText *nameLabel, *professionLabel, *DOBLabel, *emailLabel, *phoneLabel, *startYearLabelEDU, *endYearLabelEDU, *universityLabel, *courseLabel, *courseDescriptionLabel, *gradeLabel, *startYearLabelEXP, *endYearLabelEXP, *postLabel, *companyLabel, *jdLabel;
+    wxTextCtrl *name, *profession, *email, *phone, *startYearEDU, *endYearEDU, *university, *course, *courseDescription, *grade, *startYearEXP, *endYearEXP, *post, *company, *jd;
+    wxDatePickerCtrl *DOB;
+    wxButton *eduAdder, *expAdder;
+
+    wxStaticText *skillNameLabel;
+    wxTextCtrl *skillName;
+    wxStaticText *skillScoreLabel;
+    wxSpinCtrl *skillScore;
+    wxButton *skillAdder;
+    wxStaticText *awardYearLabel;
+    wxTextCtrl *awardYear;
+    wxStaticText *awardTitleLabel;
+    wxTextCtrl *awardTitle;
+    wxStaticText *awardPlaceLabel;
+    wxTextCtrl *awardPlace;
+    wxStaticText *awardDescriptionLabel;
+    wxTextCtrl *awardDescription;
+    wxButton *awardAdder;
+    wxStaticText *serviceNameLabel;
+    wxTextCtrl *serviceName;
+    wxStaticText *serviceDescriptionLabel;
+    wxTextCtrl *serviceDescription;
+    wxButton *serviceAdder;
+    wxStaticText *projectTitleLabel;
+    wxTextCtrl *projectTitle;
+    wxStaticText *projectLinkLabel;
+    wxTextCtrl *projectLink;
+    wxStaticText *projectServiceLabel;
+    wxTextCtrl *projectService;
+    wxStaticText *projectImageLabel;
+    wxFilePickerCtrl *projectImage;
+    wxButton *projectAdder;
+    wxStaticText *logoLabel;
+    wxFilePickerCtrl *logo;
+    wxStaticText *profileLabel;
+    wxFilePickerCtrl *profile;
+
 public:
-    virtual bool OnInit();
+    mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, const wxBitmap &bitmap, const wxPoint &pos, long style);
+    ~mainWizard();
+    WizardPages m_pages;
+
+    void labelCreator(wxStaticText *label, wxWizardPageSimple *page, wxGridSizer *grid, const wxString &title);
+    wxString getValue();
 };
 
 class MyFrame : public wxFrame
 {
+    wxDECLARE_EVENT_TABLE();
+
 public:
-    MyFrame();
+    MyFrame() : wxFrame(NULL, wxID_ANY, "Portfolio Website Builder"){}; // Constructor
+    void exitWizard(wxWizardEvent &event);
+    void createWeb(wxWizardEvent &event);
 };
 
-class mainWizard : public wxWizard
+class MyApp : public wxApp
 {
-private:
-protected:
-    wxStaticText* nameLabel;
-    wxTextCtrl* name;
-    wxStaticText* professionLabel;
-    wxTextCtrl* profession;
-    wxStaticText* DOBLabel;
-    wxDatePickerCtrl* DOB;
-    wxStaticText* emailLabel;
-    wxTextCtrl* email;
-    wxStaticText* phoneLabel;
-    wxTextCtrl* phone;
-    wxStaticText* startYearLabelEDU;
-    wxStaticText* endYearLabelEDU;
-    wxTextCtrl* startYearEDU;
-    wxTextCtrl* endYearEDU;
-    wxStaticText* universityLabel;
-    wxTextCtrl* university;
-    wxStaticText* courseLabel;
-    wxTextCtrl* course;
-    wxStaticText* courseDescriptionLabel;
-    wxTextCtrl* courseDescription;
-    wxStaticText* gradeLabel;
-    wxTextCtrl* grade;
-    wxButton* eduAdder;
-    wxStaticText* startYearLabelEXP;
-    wxStaticText* endYearLabelEXP;
-    wxTextCtrl* startYearEXP;
-    wxTextCtrl* endYearEXP;
-    wxStaticText* postLabel;
-    wxTextCtrl* post;
-    wxStaticText* companyLabel;
-    wxTextCtrl* company;
-    wxStaticText* jdLabel;
-    wxTextCtrl* jd;
-    wxButton* expAdder;
-    wxStaticText* m_staticText26;
-
 public:
-    mainWizard(wxWindow* parent, wxWindowID id, const wxString& title, const wxBitmap& bitmap, const wxPoint& pos, long style);
-    ~mainWizard();
-    WizardPages m_pages;
-    void labelCreator(wxStaticText* label, wxWizardPageSimple* page, wxGridSizer* grid, const wxString& title);
-    void textEditCreator(wxTextCtrl* textEdit, wxWizardPageSimple* page, wxGridSizer* grid);
+    // To overide base class virtuals
+    virtual bool OnInit() wxOVERRIDE;
 };
 
 wxIMPLEMENT_APP(MyApp);
