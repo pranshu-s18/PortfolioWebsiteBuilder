@@ -2,10 +2,10 @@
 
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_WIZARD_CANCEL(wxID_ANY, MyFrame::exitWizard)
-        EVT_WIZARD_FINISHED(wxID_ANY, MyFrame::createWeb)
-            wxEND_EVENT_TABLE()
+    EVT_WIZARD_FINISHED(wxID_ANY, MyFrame::createWeb)
+wxEND_EVENT_TABLE()
 
-                MyFrame *frame = new MyFrame();
+MyFrame *frame = new MyFrame();
 mainWizard *wiz = new mainWizard(frame, wxID_ANY, "Portfolio Website Builder", wxNullBitmap, wxDefaultPosition, wxDEFAULT_DIALOG_STYLE);
 
 bool MyApp::OnInit()
@@ -21,7 +21,7 @@ void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event))
 
 void MyFrame::createWeb(wxWizardEvent &event)
 {
-    wxMessageBox(wiz->getValue());
+    wxMessageBox(wiz->mainDir->GetPath());
     Close(true);
 }
 
@@ -447,6 +447,18 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
 
     page8->Add(imageWrapper2, 0, wxEXPAND, 5);
 
+    wxBoxSizer* imageWrapper3;
+    imageWrapper3 = new wxBoxSizer(wxVERTICAL);
+
+    mainDirLabel = new wxStaticText(images, wxID_ANY, wxT("Directory to save the website"), wxDefaultPosition, wxDefaultSize, 0);
+    mainDirLabel->Wrap(-1);
+    imageWrapper3->Add(mainDirLabel, 0, wxALL, 5);
+
+    mainDir = new wxDirPickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE);
+    imageWrapper3->Add(mainDir, 0, wxALL | wxEXPAND, 5);
+
+    page8->Add(imageWrapper3, 1, wxEXPAND, 5);
+
     page8->Add(0, 0, 1, wxEXPAND, 5);
 
     images->SetSizer(page8);
@@ -461,11 +473,6 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
         m_pages.Item(i)->SetPrev(m_pages.Item(i - 1));
         m_pages.Item(i - 1)->SetNext(m_pages.Item(i));
     }
-}
-
-wxString mainWizard::getValue()
-{
-    return wiz->profession->GetValue();
 }
 
 mainWizard::~mainWizard()

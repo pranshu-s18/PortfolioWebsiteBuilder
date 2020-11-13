@@ -51,6 +51,8 @@ protected:
     wxFilePickerCtrl *logo;
     wxStaticText *profileLabel;
     wxFilePickerCtrl *profile;
+    wxStaticText* mainDirLabel;
+    wxDirPickerCtrl* mainDir;
 
 public:
     mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, const wxBitmap &bitmap, const wxPoint &pos, long style);
@@ -58,7 +60,7 @@ public:
     WizardPages m_pages;
 
     void labelCreator(wxStaticText *label, wxWizardPageSimple *page, wxGridSizer *grid, const wxString &title);
-    wxString getValue();
+    friend class MyFrame;
 };
 
 class MyFrame : public wxFrame
