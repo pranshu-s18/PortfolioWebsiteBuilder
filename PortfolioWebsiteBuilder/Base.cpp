@@ -1,9 +1,9 @@
 #include "Base.h"
 
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_WIZARD_CANCEL(wxID_ANY, MyFrame::exitWizard)
-    EVT_WIZARD_FINISHED(wxID_ANY, MyFrame::createWeb)
-wxEND_EVENT_TABLE()
+BEGIN_EVENT_TABLE(MyFrame, wxFrame)
+EVT_WIZARD_CANCEL(wxID_ANY, MyFrame::exitWizard)
+EVT_WIZARD_FINISHED(wxID_ANY, mainWizard::createWeb)
+END_EVENT_TABLE()
 
 MyFrame *frame = new MyFrame();
 mainWizard *wiz = new mainWizard(frame, wxID_ANY, "Portfolio Website Builder", wxNullBitmap, wxDefaultPosition, wxDEFAULT_DIALOG_STYLE);
@@ -19,10 +19,151 @@ void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event))
     Close(true);
 }
 
-void MyFrame::createWeb(wxWizardEvent &event)
+void mainWizard::createWeb(wxWizardEvent &event)
 {
-    wxMessageBox(wiz->mainDir->GetPath());
+    wxString path = wiz->mainDir->GetPath();
+    wxDir dir(path);
+    dir.Make("Portfolio Website");
+
+    wxFileName newPath = wxFileName::DirName(path);
+    newPath.AppendDir("Portfolio Website");
+    dir.Open(newPath.GetFullPath());
+
+    dir.Make("css");
+    newPath.AppendDir("css");
+    dir.Open("css");
+
+    
+
+    dir.Make("fonts");
+    dir.Make("images");
+    dir.Make("js");
+
     Close(true);
+}
+
+int mainWizard::eduCount = 0;
+int mainWizard::expCount = 0;
+int mainWizard::skillCount = 0;
+int mainWizard::awardCount = 0;
+int mainWizard::serviceCount = 0;
+int mainWizard::projectCount = 0;
+
+void mainWizard::experience(wxCommandEvent &event)
+{
+    if (expCount < 30)
+    {
+        frame->expSaver[expCount++] = (startYearEXP->GetValue());
+        startYearEXP->SetValue("");
+
+        frame->expSaver[expCount++] = (endYearEXP->GetValue());
+        endYearEXP->SetValue("");
+
+        frame->expSaver[expCount++] = (post->GetValue());
+        post->SetValue("");
+
+        frame->expSaver[expCount++] = (company->GetValue());
+        company->SetValue("");
+
+        frame->expSaver[expCount++] = (jd->GetValue());
+        jd->SetValue("");
+    }
+    else
+        wxMessageBox("Unable to store more details");
+}
+
+void mainWizard::skill(wxCommandEvent &event)
+{
+    if (skillCount < 18)
+    {
+        frame->skillSaver[skillCount++] = (skillName->GetValue());
+        skillName->SetValue("");
+
+        frame->skillSaver[skillCount++] = (std::to_string(skillScore->GetValue()));
+        skillScore->SetValue(50);
+    }
+    else
+        wxMessageBox("Unable to store more details");
+}
+
+void mainWizard::award(wxCommandEvent &event)
+{
+    if (awardCount < 16)
+    {
+        frame->awardSaver[awardCount++] = (awardYear->GetValue());
+        awardYear->SetValue("");
+
+        frame->awardSaver[awardCount++] = (awardTitle->GetValue());
+        awardTitle->SetValue("");
+
+        frame->awardSaver[awardCount++] = (awardPlace->GetValue());
+        awardPlace->SetValue("");
+
+        frame->awardSaver[awardCount++] = (awardDescription->GetValue());
+        awardDescription->SetValue("");
+    }
+    else
+        wxMessageBox("Unable to store more details");
+}
+
+void mainWizard::service(wxCommandEvent &event)
+{
+    if (serviceCount < 12)
+    {
+        frame->serviceSaver[serviceCount++] = (serviceName->GetValue());
+        serviceName->SetValue("");
+
+        frame->serviceSaver[serviceCount++] = (serviceDescription->GetValue());
+        serviceDescription->SetValue("");
+    }
+    else
+        wxMessageBox("Unable to store more details");
+}
+
+void mainWizard::project(wxCommandEvent &event)
+{
+    if (projectCount < 24)
+    {
+        frame->projectSaver[projectCount++] = projectTitle->GetValue();
+        projectTitle->SetValue("");
+
+        frame->projectSaver[projectCount++] = projectLink->GetValue();
+        projectLink->SetValue("");
+
+        frame->projectSaver[projectCount++] = (projectService->GetValue());
+        projectService->SetValue("");
+
+        frame->projectSaver[projectCount++] = (projectImage->GetPath());
+        projectImage->SetPath("");
+    }
+    else
+        wxMessageBox("Unable to store more details");
+}
+
+void mainWizard::education(wxCommandEvent &WXUNUSED(event))
+{
+    if (eduCount < 24)
+    {
+        frame->eduSaver[eduCount++] = startYearEDU->GetValue();
+        startYearEDU->SetValue("");
+
+        frame->eduSaver[eduCount++] = endYearEDU->GetValue();
+        endYearEDU->SetValue("");
+
+        frame->eduSaver[eduCount++] = university->GetValue();
+        university->SetValue("");
+
+        frame->eduSaver[eduCount++] = course->GetValue();
+        course->SetValue("");
+
+        frame->eduSaver[eduCount++] = courseDescription->GetValue();
+        courseDescription->SetValue("");
+
+        frame->eduSaver[eduCount++] = grade->GetValue();
+        grade->SetValue("");
+    }
+    else
+        wxMessageBox("Unable to store more details");
 }
 
 void mainWizard::labelCreator(wxStaticText *label, wxWizardPageSimple *page, wxGridSizer *grid, const wxString &title)
@@ -142,7 +283,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
 
     buttonWrapper2->Add(0, 0, 1, wxEXPAND, 5);
 
-    eduAdder = new wxButton(education, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    eduAdder = new wxButton(education, BTN_EDU, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper2->Add(eduAdder, 0, wxALL, 5);
 
     pageWrapper2->Add(buttonWrapper2, 0, wxALIGN_RIGHT, 5);
@@ -202,7 +343,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     wxBoxSizer *buttonWrapper3;
     buttonWrapper3 = new wxBoxSizer(wxVERTICAL);
 
-    expAdder = new wxButton(experience, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    expAdder = new wxButton(experience, BTN_EXP, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper3->Add(expAdder, 0, wxALL, 5);
 
     pageWrapper3->Add(buttonWrapper3, 0, wxALIGN_RIGHT, 5);
@@ -230,7 +371,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     skillScoreLabel->Wrap(-1);
     page4->Add(skillScoreLabel, 0, wxALL, 5);
 
-    skillScore = new wxSpinCtrl(skills, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL | wxSP_ARROW_KEYS, 0, 100, 0);
+    skillScore = new wxSpinCtrl(skills, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL | wxSP_ARROW_KEYS, 0, 100, 50);
     page4->Add(skillScore, 0, wxALL | wxEXPAND, 5);
 
     page4->Add(0, 0, 4, wxEXPAND, 5);
@@ -238,7 +379,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     wxBoxSizer *buttonWrapper4;
     buttonWrapper4 = new wxBoxSizer(wxHORIZONTAL);
 
-    skillAdder = new wxButton(skills, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    skillAdder = new wxButton(skills, BTN_SKILL, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper4->Add(skillAdder, 0, wxALL, 5);
 
     page4->Add(buttonWrapper4, 0, wxALIGN_RIGHT, 5);
@@ -304,7 +445,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     wxBoxSizer *buttonWrapper5;
     buttonWrapper5 = new wxBoxSizer(wxHORIZONTAL);
 
-    awardAdder = new wxButton(awards, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    awardAdder = new wxButton(awards, BTN_AWARD, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper5->Add(awardAdder, 0, wxALL, 5);
 
     page5->Add(buttonWrapper5, 0, wxALIGN_RIGHT, 5);
@@ -342,7 +483,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
 
     buttonWrapper6->Add(0, 0, 1, wxEXPAND, 5);
 
-    serviceAdder = new wxButton(services, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    serviceAdder = new wxButton(services, BTN_SERVICE, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper6->Add(serviceAdder, 0, wxALL, 5);
 
     page6->Add(buttonWrapper6, 0, wxALIGN_RIGHT, 5);
@@ -408,7 +549,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     wxBoxSizer *buttonWrapper7;
     buttonWrapper7 = new wxBoxSizer(wxHORIZONTAL);
 
-    projectAdder = new wxButton(projects, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
+    projectAdder = new wxButton(projects, BTN_PROJECT, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0);
     buttonWrapper7->Add(projectAdder, 0, wxALL, 5);
 
     page7->Add(buttonWrapper7, 0, wxTOP, 5);
@@ -447,14 +588,14 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
 
     page8->Add(imageWrapper2, 0, wxEXPAND, 5);
 
-    wxBoxSizer* imageWrapper3;
+    wxBoxSizer *imageWrapper3;
     imageWrapper3 = new wxBoxSizer(wxVERTICAL);
 
     mainDirLabel = new wxStaticText(images, wxID_ANY, wxT("Directory to save the website"), wxDefaultPosition, wxDefaultSize, 0);
     mainDirLabel->Wrap(-1);
     imageWrapper3->Add(mainDirLabel, 0, wxALL, 5);
 
-    mainDir = new wxDirPickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE);
+    mainDir = new wxDirPickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_CHANGE_DIR | wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST);
     imageWrapper3->Add(mainDir, 0, wxALL | wxEXPAND, 5);
 
     page8->Add(imageWrapper3, 1, wxEXPAND, 5);
@@ -473,9 +614,22 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
         m_pages.Item(i)->SetPrev(m_pages.Item(i - 1));
         m_pages.Item(i - 1)->SetNext(m_pages.Item(i));
     }
+
+    eduAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::education), NULL, this);
+    expAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::experience), NULL, this);
+    skillAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::skill), NULL, this);
+    awardAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::award), NULL, this);
+    serviceAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::service), NULL, this);
+    projectAdder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::project), NULL, this);
 }
 
 mainWizard::~mainWizard()
 {
+    eduAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::education), NULL, this);
+    expAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::experience), NULL, this);
+    skillAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::skill), NULL, this);
+    awardAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::award), NULL, this);
+    serviceAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::service), NULL, this);
+    projectAdder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainWizard::project), NULL, this);
     m_pages.Clear();
 }
