@@ -24,7 +24,6 @@ void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event)) { Close(true); }
 
 void mainWizard::createWeb(wxWizardEvent &event)
 {
-    wxMessageBox(projectImage->GetPath());
     // wxString path = wiz->mainDir->GetPath();
     // wxDir dir(path);
     // dir.Make("Portfolio Website");
@@ -187,6 +186,7 @@ wxTextCtrl *mainWizard::textCreator(wxWizardPageSimple *page, wxBoxSizer *box, b
     return txt;
 }
 
+// Function to create a file picker that only accepts image files and adding it to a BoxSizer
 wxFilePickerCtrl *mainWizard::imagePicker(wxWizardPageSimple *page, wxBoxSizer *box)
 {
     wxFilePickerCtrl *image = new wxFilePickerCtrl(page, wxID_ANY, wxEmptyString, wxT("Select an image"), wxT("Image files(*.xbm, *.tif, *.pjp, *.svgz, *.jpg, *.ico, *.tiff, *.gif, *.svg, *.jfif, *.webp, *.png, *.bmp, *.pjpeg, *.avif)|.xbm;*.tif;*.pjp;*.svgz;*.jpg;*.ico;*.tiff;*.gif;*.svg;*.jfif;*.webp;*.png;*.bmp;*.pjpeg;*.avif)"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE | wxFLP_OPEN);
@@ -399,7 +399,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     services->SetSizer(page6);
     services->Layout();
     page6->Fit(services);
-    // ---------------------------------------------------PAGE 7--------------------------------------------------------------------------------
+   // ---------------------------------------------------PAGE 7--------------------------------------------------------------------------------
     // Adding page 7 in a similar manner
     wxWizardPageSimple *projects = new wxWizardPageSimple(this);
     m_pages.Add(projects);
@@ -427,10 +427,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     wxBoxSizer *projectWrapper4 = new wxBoxSizer(wxVERTICAL);
     projectImageLabel = labelCreator(projects, projectWrapper4, wxT("Screenshot"));
 
-    // Creating a File picker to add images --> Only allows the files with the given extensions
     projectImage = imagePicker(projects, projectWrapper4);
-    // new wxFilePickerCtrl(projects, wxID_ANY, wxEmptyString, wxT("Select an image"), wxT("Image files(*.xbm, *.tif, *.pjp, *.svgz, *.jpg, *.ico, *.tiff, *.gif, *.svg, *.jfif, *.webp, *.png, *.bmp, *.pjpeg, *.avif)|.xbm;*.tif;*.pjp;*.svgz;*.jpg;*.ico;*.tiff;*.gif;*.svg;*.jfif;*.webp;*.png;*.bmp;*.pjpeg;*.avif)"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE | wxFLP_OPEN);
-    // projectWrapper4->Add(projectImage, 0, wxALL | wxEXPAND, 5);
     page7->Add(projectWrapper4, 1, wxEXPAND, 5);
 
     wxBoxSizer *buttonWrapper7 = new wxBoxSizer(wxHORIZONTAL);
@@ -450,14 +447,12 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
 
     wxBoxSizer *imageWrapper1 = new wxBoxSizer(wxVERTICAL);
     logoLabel = labelCreator(images, imageWrapper1, wxT("Logo"));
-    logo = new wxFilePickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select an image"), wxT("Image files(*.xbm, *.tif, *.pjp, *.svgz, *.jpg, *.ico, *.tiff, *.gif, *.svg, *.jfif, *.webp, *.png, *.bmp, *.pjpeg, *.avif)|.xbm;*.tif;*.pjp;*.svgz;*.jpg;*.ico;*.tiff;*.gif;*.svg;*.jfif;*.webp;*.png;*.bmp;*.pjpeg;*.avif)"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE | wxFLP_OPEN);
-    imageWrapper1->Add(logo, 0, wxALL | wxEXPAND, 5);
+    logo = imagePicker(images, imageWrapper1);
     page8->Add(imageWrapper1, 0, wxEXPAND, 5);
 
     wxBoxSizer *imageWrapper2 = new wxBoxSizer(wxVERTICAL);
     profileLabel = labelCreator(images, imageWrapper2, wxT("Your picture"));
-    profile = new wxFilePickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select an image"), wxT("Image files(*.xbm, *.tif, *.pjp, *.svgz, *.jpg, *.ico, *.tiff, *.gif, *.svg, *.jfif, *.webp, *.png, *.bmp, *.pjpeg, *.avif)|.xbm;*.tif;*.pjp;*.svgz;*.jpg;*.ico;*.tiff;*.gif;*.svg;*.jfif;*.webp;*.png;*.bmp;*.pjpeg;*.avif)"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE | wxFLP_OPEN);
-    imageWrapper2->Add(profile, 0, wxALL | wxEXPAND, 5);
+    profile = imagePicker(images, imageWrapper2);
     page8->Add(imageWrapper2, 0, wxEXPAND, 5);
 
     wxBoxSizer *imageWrapper3 = new wxBoxSizer(wxVERTICAL);

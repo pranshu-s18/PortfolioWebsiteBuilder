@@ -33,7 +33,7 @@ public:
     wxStaticText *labelCreator(wxWizardPageSimple *page, wxBoxSizer *box, const wxString &title);
     wxTextCtrl *textCreator(wxWizardPageSimple *page, wxGridSizer *grid, bool expand = false);
     wxTextCtrl *textCreator(wxWizardPageSimple *page, wxBoxSizer *box, bool expand = false, bool custom = false);
-    wxFilePickerCtrl *imagePicker(wxWizardPageSimple *page, wxBoxSizer *box);
+    wxFilePickerCtrl* imagePicker(wxWizardPageSimple* page, wxBoxSizer* box);
 
     void education(wxCommandEvent &event);
     void experience(wxCommandEvent &event);
