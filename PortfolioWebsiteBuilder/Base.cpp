@@ -71,10 +71,31 @@ void mainWizard::createWeb(wxWizardEvent &event)
     file.Write("<section class=\"ftco-about img ftco-section ftco-no-pt ftco-no-pb\" id=\"about-section\"><div class=\"container\"><div class=\"row d-flex no-gutters\"><div class=\"col-md-6 col-lg-6 d-flex\"><div class=\"img-about img d-flex align-items-stretch\"><div class=\"overlay\"></div><div class=\"img d-flex align-self-stretch align-items-center\" style=\"background-image:url(images/about.jpg)\"></div></div></div><div class=\"col-md-6 col-lg-6 pl-md-5 py-5\"><div class=\"row justify-content-start pb-3\"><div class=\"col-md-12 heading-section ftco-animate\"><h1 class=\"big\">About</h1><h2 class=\"mb-4\">About Me</h2><ul class=\"about-info mt-4 px-md-0 px-2\"><li class=\"d-flex\"><span>Name:</span><span>"+wiz->name->GetValue()+ "</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Date of birth:</span><span>"+wiz->DOB->GetValue().Format("%B %d, %Y")+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Email:</span><span>"+wiz->email->GetValue()+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Phone: </span><span>"+wiz->phone->GetValue()+"</span></li></ul></div></div><div class=\"counter-wrap ftco-animate d-flex mt-md-3\"><div class=\"text\"><p class=\"mb-4\"><span class=\"number\" data-number=\"" + wiz->projectComplete->GetValue() + "\">0</span><span>Projects completed</span></p></div></div></div></div></div></section>");
 
     file.Write("<section class=\"ftco-section ftco-no-pb goto-here\" id=\"resume-section\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-3\"><nav id=\"navi\"><ul><li><a href=\"#page-1\">Education</a></li><li><a href=\"#page-2\">Experience</a></li><li><a href=\"#page-3\">Skills</a></li><li><a href=\"#page-4\">Awards</a></li></ul></nav></div><div class=\"col-md-9\"><div id=\"page-1\" class=\"page one\"><h2 class=\"heading\">Education</h2>");
-    for (int i = 0; i < Store::eduCount; i++)
-    {
-        
+    for(int i = 0; i < Store::eduCount;)
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->eduSaver[i++]+"-"+store->eduSaver[i++]+"</span><h2>" + store->eduSaver[i++] + "</h2><span class=\"position\">" + store->eduSaver[i++] + "</span><p>" + store->eduSaver[i++] + "</p></div></div>");
+
+    file.Write("</div><div id=\"page-2\" class=\"page two\"><h2 class=\"heading\">Experience</h2>");
+    for (int i = 0; i < Store::expCount;)
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">" + store->expSaver[i++] + "-" + store->expSaver[i++] + "</span><h2>"+ store->expSaver[i++] +"</h2><span class=\"position\">" + store->expSaver[i++] + "</span><p>" + store->expSaver[i++] + "</p></div></div>");
+
+    file.Write("</div><div id=\"page-3\" class=\"page three\"><h2 class=\"heading\">Skills</h2><div class=\"row progress-circle mb-5\">");
+    for (int i = 0; i < Store::skillCount && i < 6;)
+        file.Write("<div class=\"col-lg-4 mb-4\"><div class=\"bg-white rounded-lg shadow p-4\"><h2 class=\"h5 font-weight-bold text-center mb-4\">"+store->skillSaver[i++]+"</h2><div class=\"progress mx-auto mb-4\" data-value=\""+store->skillSaver[i]+"\"><span class=\"progress-left\"><span class=\"progress-bar border-primary\"></span> </span><span class=\"progress-right\"><span class=\"progress-bar border-primary\"></span></span><div class=\"progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center\"><div class=\"h2 font-weight-bold\">"+store->skillSaver[i++]+"<sup class=\"small\">%</sup></div></div></div></div></div>");
+    file.Write("</div>");
+
+    if (store->skillCount > 6) {
+        file.Write("<div class=\"row\">");
+        for (int i = 6; i < store->skillCount; i++)
+            file.Write("<div class=\"col-md-6 animate-box\"><div class=\"progress-wrap ftco-animate\"><h3>"+store->skillSaver[i++]+"</h3><div class=\"progress\"><div class=\"progress-bar color-"+to_string(i-6)+"\" role=\"progressbar\" aria-valuenow=\""+store->skillSaver[i]+"\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:"+store->skillSaver[i]+"%\"><span>"+store->skillSaver[i++]+"%</span></div></div></div></div>");
+        file.Write("</div>");
     }
+
+    file.Write("</div><div id=\"page-4\" class=\"page four\"><h2 class=\"heading\">Awards</h2>");
+    for (int i = 0; i < store->awardCount; )
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->awardSaver[i++]+"</span><h2>"+ store->awardSaver[i++] +"</h2><span class=\"position\">" + store->awardSaver[i++] + "</span><p>" + store->awardSaver[i++] + "</p></div></div>");
+    file.Write("</div></div></div></div></section>");
+
+    
 
     file.Write("<script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery-migrate-3.0.1.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/popper.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/bootstrap.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.easing.1.3.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.waypoints.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.stellar.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/owl.carousel.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.magnific-popup.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/aos.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.animateNumber.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/scrollax.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/main.js\"></script></body></html>");
 
