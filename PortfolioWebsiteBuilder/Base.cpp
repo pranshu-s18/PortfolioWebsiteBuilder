@@ -21,7 +21,7 @@ bool MyApp::OnInit()
 // Function to exit
 void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event)) { Close(true); }
 
-void mainWizard::createWeb(wxWizardEvent& event)
+void mainWizard::createWeb(wxWizardEvent &event)
 {
     wxString path = wiz->mainDir->GetPath(), sep = wxFileName::GetPathSeparator();
     wxDir dir;
@@ -35,14 +35,14 @@ void mainWizard::createWeb(wxWizardEvent& event)
     fn.Assign(path + sep + "images");
     fn.SetCwd(fn.GetFullPath());
 
-    fn.Assign(fn.GetFullPath()+sep+"logo.jpg");
+    fn.Assign(fn.GetFullPath() + sep + "logo.jpg");
 
     wxFile file;
     file.Create(fn.GetFullPath(), true);
 
     // Copying logo
     if (!wxCopyFile(wiz->logo->GetPath(), fn.GetFullPath(), true))
-       wxMessageBox("Error occurred while copying logo");
+        wxMessageBox("Error occurred while copying logo");
 
     fn.Assign(fn.GetCwd() + sep + "about.jpg");
     file.Create(fn.GetFullPath(), true);
@@ -52,12 +52,12 @@ void mainWizard::createWeb(wxWizardEvent& event)
         wxMessageBox("Error occurred while copying your photo");
 
     // Copying project images
-    for (int i = 3; i < Store::projectCount; i+=4)
+    for (int i = 3; i < Store::projectCount; i += 4)
     {
-        fn.Assign(fn.GetCwd() + sep + "work-" + to_string((i / 4)+1)+".jpg");
+        fn.Assign(fn.GetCwd() + sep + "work-" + to_string((i / 4) + 1) + ".jpg");
         file.Create(fn.GetFullPath());
 
-        if(!wxCopyFile(store->projectSaver[i], fn.GetFullPath(), true))
+        if (!wxCopyFile(store->projectSaver[i], fn.GetFullPath(), true))
             wxMessageBox("Error occurred while copying your photo");
     }
 
@@ -65,6 +65,18 @@ void mainWizard::createWeb(wxWizardEvent& event)
     fn.SetCwd(fn.GetPath());
 
     file.Create(fn.GetFullPath(), true);
+    file.Open(fn.GetFullPath(), wxFile::write);
+
+    file.Write("<!DOCTYPE html><html lang=\"en\"><head><title>" + wiz->name->GetValue() + "'s Portfolio</title><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,shrink-to-fit=no\"><link href=\"https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/animate.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/owl.carousel.min.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/owl.theme.default.min.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/magnific-popup.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/aos.css\"><link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.0.0-19/css/ionicons.min.css\"><link rel=\"stylesheet\" href=\"https://preview.colorlib.com/theme/ronaldo/css/flaticon.css\"><link rel=\"stylesheet\" href=\"https://preview.colorlib.com/theme/ronaldo/css/icomoon.css\"><link rel=\"stylesheet\" href=\"http://prototek.co.in/pranshu/portfolio/css/style.css\"></head><body data-spy=\"scroll\" data-target=\".site-navbar-target\" data-offset=\"300\"><!-- Navbar --><nav class=\"navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target\" id=\"ftco-navbar\"><div class=\"container\"><a class=\"navbar-brand\" href=\"#\" style=\"background:url(images/logo.jpg);background-size:contain;height:40px;width:40px;margin-top:.3125rem;margin-bottom:.3125rem\"></a> <button class=\"navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle\" type=\"button\" data-toggle=\"collapse\" data-target=\"#ftco-nav\" aria-controls=\"ftco-nav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\"><span class=\"oi oi-menu\"></span> Menu</button><div class=\"collapse navbar-collapse\" id=\"ftco-nav\"><ul class=\"navbar-nav nav ml-auto\"><li class=\"nav-item\"><a href=\"#home-section\" class=\"nav-link\"><span>Home</span></a></li><li class=\"nav-item\"><a href=\"#about-section\" class=\"nav-link\"><span>About</span></a></li><li class=\"nav-item\"><a href=\"#resume-section\" class=\"nav-link\"><span>Resume</span></a></li><li class=\"nav-item\"><a href=\"#services-section\" class=\"nav-link\"><span>Services</span></a></li><li class=\"nav-item\"><a href=\"#projects-section\" class=\"nav-link\"><span>Projects</span></a></li><li class=\"nav-item\"><a href=\"#contact-section\" class=\"nav-link\"><span>Contact</span></a></li></ul></div></div></nav><section class=\"hero-wrap js-fullheight\"><div class=\"overlay\"></div><div class=\"container\"><div class=\"row no-gutters slider-text js-fullheight justify-content-center align-items-center\"><div class=\"col-lg-8 col-md-6 ftco-animate d-flex align-items-center\"><div class=\"text text-center\"><span class=\"subheading\">Hey! I am</span><h1>" + wiz->name->GetValue() + "</h1><h2>I'm a<span class=\"txt-rotate\" data-period=\"500\" data-rotate='[ \"" + wiz->profession->GetValue() + "\" ]'></span></h2></div></div></div></div><div class=\"mouse\"><a href=\"#\" class=\"mouse-icon\"><div class=\"mouse-wheel\"><span class=\"ion-ios-arrow-round-down\"></span></div></a></div></section>");
+    file.Write("<section class=\"ftco-about img ftco-section ftco-no-pt ftco-no-pb\" id=\"about-section\"><div class=\"container\"><div class=\"row d-flex no-gutters\"><div class=\"col-md-6 col-lg-6 d-flex\"><div class=\"img-about img d-flex align-items-stretch\"><div class=\"overlay\"></div><div class=\"img d-flex align-self-stretch align-items-center\" style=\"background-image:url(images/about.jpg)\"></div></div></div><div class=\"col-md-6 col-lg-6 pl-md-5 py-5\"><div class=\"row justify-content-start pb-3\"><div class=\"col-md-12 heading-section ftco-animate\"><h1 class=\"big\">About</h1><h2 class=\"mb-4\">About Me</h2><ul class=\"about-info mt-4 px-md-0 px-2\"><li class=\"d-flex\"><span>Name:</span><span>"+wiz->name->GetValue()+ "</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Date of birth:</span><span>"+wiz->DOB->GetValue().Format("%B %d, %Y")+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Email:</span><span>"+wiz->email->GetValue()+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Phone: </span><span>"+wiz->phone->GetValue()+"</span></li></ul></div></div><div class=\"counter-wrap ftco-animate d-flex mt-md-3\"><div class=\"text\"><p class=\"mb-4\"><span class=\"number\" data-number=\"" + wiz->projectComplete->GetValue() + "\">0</span><span>Projects completed</span></p></div></div></div></div></div></section>");
+
+    file.Write("<section class=\"ftco-section ftco-no-pb goto-here\" id=\"resume-section\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-3\"><nav id=\"navi\"><ul><li><a href=\"#page-1\">Education</a></li><li><a href=\"#page-2\">Experience</a></li><li><a href=\"#page-3\">Skills</a></li><li><a href=\"#page-4\">Awards</a></li></ul></nav></div><div class=\"col-md-9\"><div id=\"page-1\" class=\"page one\"><h2 class=\"heading\">Education</h2>");
+    for (int i = 0; i < Store::eduCount; i++)
+    {
+        
+    }
+
+    file.Write("<script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery-migrate-3.0.1.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/popper.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/bootstrap.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.easing.1.3.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.waypoints.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.stellar.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/owl.carousel.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.magnific-popup.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/aos.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/jquery.animateNumber.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/scrollax.min.js\"></script><script src=\"http://prototek.co.in/pranshu/portfolio/js/main.js\"></script></body></html>");
 
     Close(true);
 }
@@ -490,6 +502,11 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     mainDir = new wxDirPickerCtrl(images, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_CHANGE_DIR | wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST);
     imageWrapper3->Add(mainDir, 0, wxALL | wxEXPAND, 5);
     page8->Add(imageWrapper3, 1, wxEXPAND, 5);
+
+    wxBoxSizer* imageWrapper4 = new wxBoxSizer(wxVERTICAL);
+    projectCompleteLabel = labelCreator(images, imageWrapper4, wxT("Total number of projects completed"));
+    projectComplete = textCreator(images, imageWrapper4, true);
+    page8->Add(imageWrapper4, 1, wxEXPAND, 5);
 
     page8->Add(0, 0, 1, wxEXPAND, 5);
 

@@ -15,8 +15,8 @@ WX_DEFINE_ARRAY_PTR(wxWizardPageSimple *, WizardPages);
 class mainWizard : public wxWizard
 {
 protected:
-    wxStaticText *nameLabel, *professionLabel, *DOBLabel, *emailLabel, *phoneLabel, *startYearLabelEDU, *endYearLabelEDU, *universityLabel, *courseLabel, *courseDescriptionLabel, *gradeLabel, *startYearLabelEXP, *endYearLabelEXP, *postLabel, *companyLabel, *jdLabel, *skillNameLabel, *skillScoreLabel, *awardYearLabel, *awardTitleLabel, *awardPlaceLabel, *awardDescriptionLabel, *serviceNameLabel, *serviceDescriptionLabel, *projectTitleLabel, *projectLinkLabel, *projectServiceLabel, *projectImageLabel, *logoLabel, *profileLabel, *mainDirLabel;
-    wxTextCtrl *name, *profession, *email, *phone, *startYearEDU, *endYearEDU, *university, *course, *courseDescription, *grade, *startYearEXP, *endYearEXP, *post, *company, *jd, *skillName, *awardYear, *awardTitle, *awardPlace, *awardDescription, *serviceName, *serviceDescription, *projectTitle, *projectLink, *projectService;
+    wxStaticText *nameLabel, *professionLabel, *DOBLabel, *emailLabel, *phoneLabel, *startYearLabelEDU, *endYearLabelEDU, *universityLabel, *courseLabel, *courseDescriptionLabel, *gradeLabel, *startYearLabelEXP, *endYearLabelEXP, *postLabel, *companyLabel, *jdLabel, *skillNameLabel, *skillScoreLabel, *awardYearLabel, *awardTitleLabel, *awardPlaceLabel, *awardDescriptionLabel, *serviceNameLabel, *serviceDescriptionLabel, *projectTitleLabel, *projectLinkLabel, *projectServiceLabel, *projectImageLabel, *logoLabel, *profileLabel, *mainDirLabel, *projectCompleteLabel;
+    wxTextCtrl *name, *profession, *email, *phone, *startYearEDU, *endYearEDU, *university, *course, *courseDescription, *grade, *startYearEXP, *endYearEXP, *post, *company, *jd, *skillName, *awardYear, *awardTitle, *awardPlace, *awardDescription, *serviceName, *serviceDescription, *projectTitle, *projectLink, *projectService, *projectComplete;
     wxDatePickerCtrl *DOB;
     wxSpinCtrl *skillScore;
     wxFilePickerCtrl *projectImage, *logo, *profile;
@@ -33,7 +33,7 @@ public:
     wxStaticText *labelCreator(wxWizardPageSimple *page, wxBoxSizer *box, const wxString &title);
     wxTextCtrl *textCreator(wxWizardPageSimple *page, wxGridSizer *grid, bool expand = false);
     wxTextCtrl *textCreator(wxWizardPageSimple *page, wxBoxSizer *box, bool expand = false, bool custom = false);
-    wxFilePickerCtrl* imagePicker(wxWizardPageSimple* page, wxBoxSizer* box);
+    wxFilePickerCtrl *imagePicker(wxWizardPageSimple *page, wxBoxSizer *box);
 
     void education(wxCommandEvent &event);
     void experience(wxCommandEvent &event);
