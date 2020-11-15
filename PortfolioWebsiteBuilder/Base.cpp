@@ -1,5 +1,4 @@
 #include "Base.h"
-#include <fstream>
 using namespace std;
 
 // Mapping events and functions
@@ -22,19 +21,50 @@ bool MyApp::OnInit()
 // Function to exit
 void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event)) { Close(true); }
 
-void mainWizard::createWeb(wxWizardEvent &event)
+void mainWizard::createWeb(wxWizardEvent& event)
 {
-    // wxString path = wiz->mainDir->GetPath();
-    // wxDir dir(path);
-    // dir.Make("Portfolio Website");
+    wxString path = wiz->mainDir->GetPath(), sep = wxFileName::GetPathSeparator();
+    wxDir dir;
 
-    // wxFileName newPath = wxFileName::DirName(path);
-    // newPath.AppendDir("Portfolio Website");
-    // dir.Open(newPath.GetFullPath());
+    wxFileName fn = wxFileName::DirName(path);
+    fn.AppendDir("images");
 
-    // dir.Make("images");
-    // newPath.AppendDir("images");
-    // dir.Open(newPath.GetFullPath());
+    if (!wxDirExists(fn.GetPath()))
+        dir.Make("images");
+
+    fn.Assign(path + sep + "images");
+    fn.SetCwd(fn.GetFullPath());
+
+    fn.Assign(fn.GetFullPath()+sep+"logo.jpg");
+
+    wxFile file;
+    file.Create(fn.GetFullPath(), true);
+
+    // Copying logo
+    if (!wxCopyFile(wiz->logo->GetPath(), fn.GetFullPath(), true))
+       wxMessageBox("Error occurred while copying logo");
+
+    fn.Assign(fn.GetCwd() + sep + "about.jpg");
+    file.Create(fn.GetFullPath(), true);
+
+    // Copying profile
+    if (!wxCopyFile(wiz->profile->GetPath(), fn.GetFullPath(), true))
+        wxMessageBox("Error occurred while copying your photo");
+
+    // Copying project images
+    for (int i = 3; i < Store::projectCount; i+=4)
+    {
+        fn.Assign(fn.GetCwd() + sep + "work-" + to_string((i / 4)+1)+".jpg");
+        file.Create(fn.GetFullPath());
+
+        if(!wxCopyFile(store->projectSaver[i], fn.GetFullPath(), true))
+            wxMessageBox("Error occurred while copying your photo");
+    }
+
+    fn.Assign(path + sep + "index.html");
+    fn.SetCwd(fn.GetPath());
+
+    file.Create(fn.GetFullPath(), true);
 
     Close(true);
 }
@@ -399,7 +429,7 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     services->SetSizer(page6);
     services->Layout();
     page6->Fit(services);
-   // ---------------------------------------------------PAGE 7--------------------------------------------------------------------------------
+    // ---------------------------------------------------PAGE 7--------------------------------------------------------------------------------
     // Adding page 7 in a similar manner
     wxWizardPageSimple *projects = new wxWizardPageSimple(this);
     m_pages.Add(projects);
