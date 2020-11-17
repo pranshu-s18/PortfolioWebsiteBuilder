@@ -5,6 +5,7 @@ using namespace std;
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 EVT_WIZARD_CANCEL(wxID_ANY, MyFrame::exitWizard)
 EVT_WIZARD_FINISHED(wxID_ANY, mainWizard::createWeb)
+EVT_WIZARD_PAGE_CHANGED(wxID_ANY, mainWizard::changeTitle)
 END_EVENT_TABLE()
 
 MyFrame *frame = new MyFrame();
@@ -20,6 +21,30 @@ bool MyApp::OnInit()
 
 // Function to exit
 void MyFrame::exitWizard(wxWizardEvent &WXUNUSED(event)) { Close(true); }
+
+void mainWizard::changeTitle(wxWizardEvent& event) {
+    event.GetDirection() ? wiz->cur++ : wiz->cur--;
+    
+    switch (wiz->cur)
+    {
+    case 0: wiz->SetTitle("Personal Details");
+        break;
+    case 1: wiz->SetTitle("Education Details");
+        break;
+    case 2: wiz->SetTitle("Work Experience");
+        break;
+    case 3: wiz->SetTitle("Your skills");
+        break;
+    case 4: wiz->SetTitle("Awards");
+        break;
+    case 5: wiz->SetTitle("Services you provide");
+        break;
+    case 6: wiz->SetTitle("Projects");
+        break;
+    case 7: wiz->SetTitle("Extra Images");
+        break;
+    }
+}
 
 void mainWizard::createWeb(wxWizardEvent &event)
 {
@@ -58,7 +83,7 @@ void mainWizard::createWeb(wxWizardEvent &event)
         file.Create(fn.GetFullPath());
 
         if (!wxCopyFile(store->projectSaver[i], fn.GetFullPath(), true))
-            wxMessageBox("Error occurred while copying your photo");
+            wxMessageBox("Error occurred while copying project images");
     }
 
     fn.Assign(path + sep + "index.html");
@@ -71,33 +96,33 @@ void mainWizard::createWeb(wxWizardEvent &event)
     file.Write("<section class=\"ftco-about img ftco-section ftco-no-pt ftco-no-pb\" id=\"about-section\"><div class=\"container\"><div class=\"row d-flex no-gutters\"><div class=\"col-md-6 col-lg-6 d-flex\"><div class=\"img-about img d-flex align-items-stretch\"><div class=\"overlay\"></div><div class=\"img d-flex align-self-stretch align-items-center\" style=\"background-image:url(images/about.jpg)\"></div></div></div><div class=\"col-md-6 col-lg-6 pl-md-5 py-5\"><div class=\"row justify-content-start pb-3\"><div class=\"col-md-12 heading-section ftco-animate\"><h1 class=\"big\">About</h1><h2 class=\"mb-4\">About Me</h2><ul class=\"about-info mt-4 px-md-0 px-2\"><li class=\"d-flex\"><span>Name:</span><span>"+wiz->name->GetValue()+ "</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Date of birth:</span><span>"+wiz->DOB->GetValue().Format("%B %d, %Y")+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Email:</span><span>"+wiz->email->GetValue()+"</span></li><li class=\"d-flex\"></li><li class=\"d-flex\"><span>Phone: </span><span>"+wiz->phone->GetValue()+"</span></li></ul></div></div><div class=\"counter-wrap ftco-animate d-flex mt-md-3\"><div class=\"text\"><p class=\"mb-4\"><span class=\"number\" data-number=\"" + wiz->projectComplete->GetValue() + "\">0</span><span>Projects completed</span></p></div></div></div></div></div></section>");
 
     file.Write("<section class=\"ftco-section ftco-no-pb goto-here\" id=\"resume-section\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-3\"><nav id=\"navi\"><ul><li><a href=\"#page-1\">Education</a></li><li><a href=\"#page-2\">Experience</a></li><li><a href=\"#page-3\">Skills</a></li><li><a href=\"#page-4\">Awards</a></li></ul></nav></div><div class=\"col-md-9\"><div id=\"page-1\" class=\"page one\"><h2 class=\"heading\">Education</h2>");
-    for(int i = 0; i < Store::eduCount;)
-        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->eduSaver[i++]+"-"+store->eduSaver[i++]+"</span><h2>" + store->eduSaver[i++] + "</h2><span class=\"position\">" + store->eduSaver[i++] + "</span><p>" + store->eduSaver[i++] + "</p></div></div>");
+    for(int i = 0; i < Store::eduCount; i+=5)
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->eduSaver[i]+"-"+store->eduSaver[i+1]+"</span><h2>" + store->eduSaver[i+3] + "</h2><span class=\"position\">" + store->eduSaver[i+2] + "</span><p>" + store->eduSaver[i+4] + "</p></div></div>");
 
     file.Write("</div><div id=\"page-2\" class=\"page two\"><h2 class=\"heading\">Experience</h2>");
-    for (int i = 0; i < Store::expCount;)
-        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">" + store->expSaver[i++] + "-" + store->expSaver[i++] + "</span><h2>"+ store->expSaver[i++] +"</h2><span class=\"position\">" + store->expSaver[i++] + "</span><p>" + store->expSaver[i++] + "</p></div></div>");
+    for (int i = 0; i < Store::expCount; i+=5)
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">" + store->expSaver[i] + "-" + store->expSaver[i+1] + "</span><h2>"+ store->expSaver[i+2] +"</h2><span class=\"position\">" + store->expSaver[i+3] + "</span><p>" + store->expSaver[i+4] + "</p></div></div>");
 
     file.Write("</div><div id=\"page-3\" class=\"page three\"><h2 class=\"heading\">Skills</h2><div class=\"row progress-circle mb-5\">");
-    for (int i = 0; i < Store::skillCount && i < 6;)
-        file.Write("<div class=\"col-lg-4 mb-4\"><div class=\"bg-white rounded-lg shadow p-4\"><h2 class=\"h5 font-weight-bold text-center mb-4\">"+store->skillSaver[i++]+"</h2><div class=\"progress mx-auto mb-4\" data-value=\""+store->skillSaver[i]+"\"><span class=\"progress-left\"><span class=\"progress-bar border-primary\"></span> </span><span class=\"progress-right\"><span class=\"progress-bar border-primary\"></span></span><div class=\"progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center\"><div class=\"h2 font-weight-bold\">"+store->skillSaver[i++]+"<sup class=\"small\">%</sup></div></div></div></div></div>");
+    for (int i = 0; i < Store::skillCount && i < 6; i+=2)
+        file.Write("<div class=\"col-lg-4 mb-4\"><div class=\"bg-white rounded-lg shadow p-4\"><h2 class=\"h5 font-weight-bold text-center mb-4\">"+store->skillSaver[i]+"</h2><div class=\"progress mx-auto mb-4\" data-value=\""+store->skillSaver[i+1]+"\"><span class=\"progress-left\"><span class=\"progress-bar border-primary\"></span> </span><span class=\"progress-right\"><span class=\"progress-bar border-primary\"></span></span><div class=\"progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center\"><div class=\"h2 font-weight-bold\">"+store->skillSaver[i+1]+"<sup class=\"small\">%</sup></div></div></div></div></div>");
     file.Write("</div>");
 
     if (Store::skillCount > 6) {
         file.Write("<div class=\"row\">");
-        for (int i = 6; i < Store::skillCount; i++)
-            file.Write("<div class=\"col-md-6 animate-box\"><div class=\"progress-wrap ftco-animate\"><h3>"+store->skillSaver[i++]+"</h3><div class=\"progress\"><div class=\"progress-bar color-"+to_string(i-6)+"\" role=\"progressbar\" aria-valuenow=\""+store->skillSaver[i]+"\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:"+store->skillSaver[i]+"%\"><span>"+store->skillSaver[i++]+"%</span></div></div></div></div>");
+        for (int i = 6; i < Store::skillCount; i+=2)
+            file.Write("<div class=\"col-md-6 animate-box\"><div class=\"progress-wrap ftco-animate\"><h3>"+store->skillSaver[i]+"</h3><div class=\"progress\"><div class=\"progress-bar color-"+to_string(i-5)+"\" role=\"progressbar\" aria-valuenow=\""+store->skillSaver[i+1]+"\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:"+store->skillSaver[i+1]+"%\"><span>"+store->skillSaver[i+1]+"%</span></div></div></div></div>");
         file.Write("</div>");
     }
 
     file.Write("</div><div id=\"page-4\" class=\"page four\"><h2 class=\"heading\">Awards</h2>");
-    for (int i = 0; i < Store::awardCount; )
-        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->awardSaver[i++]+"</span><h2>"+ store->awardSaver[i++] +"</h2><span class=\"position\">" + store->awardSaver[i++] + "</span><p>" + store->awardSaver[i++] + "</p></div></div>");
+    for (int i = 0; i < Store::awardCount; i+=4)
+        file.Write("<div class=\"resume-wrap d-flex ftco-animate\"><div class=\"icon d-flex align-items-center justify-content-center\"><span class=\"flaticon-ideas\"></span></div><div class=\"text pl-3\"><span class=\"date\">"+store->awardSaver[i]+"</span><h2>"+ store->awardSaver[i+1] +"</h2><span class=\"position\">" + store->awardSaver[i+2] + "</span><p>" + store->awardSaver[i+3] + "</p></div></div>");
     file.Write("</div></div></div></div></section>");
 
     file.Write("<section class=\"ftco-section\" id=\"services-section\" style=\"padding-top:0!important\"><div class=\"container-fluid px-md-5\"><div class=\"row justify-content-center py-5 mt-5\"><div class=\"col-md-12 heading-section text-center ftco-animate\"><h1 class=\"big big-2\">Services</h1><h2 class=\"mb-4\">Services</h2></div></div><div class=\"row\">");
-    for (int i = 0; i < Store::serviceCount;)
-        file.Write("<div class=\"col-md-4 text-center d-flex ftco-animate\"><a href=\"#\" class=\"services-1 shadow\"><span class=\"icon\"><i class=\"flaticon-analysis\"></i></span><div class=\"desc\"><h3 class=\"mb-5\">"+store->serviceSaver[i++]+"</h3><p>"+store->serviceSaver[i++]+"</p></div></a></div>");
+    for (int i = 0; i < Store::serviceCount; i+=2)
+        file.Write("<div class=\"col-md-4 text-center d-flex ftco-animate\"><a href=\"#\" class=\"services-1 shadow\"><span class=\"icon\"><i class=\"flaticon-analysis\"></i></span><div class=\"desc\"><h3 class=\"mb-5\">"+store->serviceSaver[i]+"</h3><p>"+store->serviceSaver[i+1]+"</p></div></a></div>");
     file.Write("</div></div></section>");
 
     file.Write("<section class=\"ftco-section ftco-project\" id=\"projects-section\" style=\"padding-top:3rem!important\"><div class=\"container-fluid px-md-0\"><div class=\"row no-gutters justify-content-center pb-5\"><div class=\"col-md-12 heading-section text-center ftco-animate\"><h1 class=\"big big-2\">Projects</h1><h2 class=\"mb-4\">Our Projects</h2></div></div><div class=\"row no-gutters\">");
@@ -154,7 +179,6 @@ void mainWizard::education(wxCommandEvent &WXUNUSED(event))
         storeReset(university, 'E');
         storeReset(course, 'E');
         storeReset(courseDescription, 'E');
-        storeReset(grade, 'E');
     }
     else
         wxMessageBox("Unable to store more details");
@@ -335,9 +359,6 @@ mainWizard::mainWizard(wxWindow *parent, wxWindowID id, const wxString &title, c
     courseDescriptionLabel = labelCreator(education, page2, wxT("Course Description"));
     courseDescription = new wxTextCtrl(education, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE); // Multiline TextBox
     page2->Add(courseDescription, 0, wxALL, 5);
-
-    gradeLabel = labelCreator(education, page2, wxT("Grade"));
-    grade = textCreator(education, page2, true);
 
     pageWrapper2->Add(page2, 1, wxEXPAND, 5); // Adding page2 to pageWrapper2
 

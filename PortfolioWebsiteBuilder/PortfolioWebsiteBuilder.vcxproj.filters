@@ -27,4 +27,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\Pranshu Saxena\Desktop\wxbase314u_vc14x_x64.dll" />
+    <None Include="C:\Users\Pranshu Saxena\Desktop\wxmsw314u_core_vc14x_x64.dll" />
+  </ItemGroup>
 </Project>
